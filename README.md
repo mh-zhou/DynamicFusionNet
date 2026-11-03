@@ -44,6 +44,25 @@ The model is available in [`DynamicFusionNet.py`](DynamicFusionNet.py) for integ
   </tr>
 </table>
 
+### Failure analysis
+
+The following figures show the held-out performance distribution and representative failure cases on BraTS 2021.
+
+<table>
+  <tr>
+    <th align="center">Failure distribution</th>
+    <th align="center">Representative cases</th>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><a href="assets/failure-distribution.png"><img src="assets/failure-distribution.png" width="360" alt="Figure 6: slice-level mean Dice distribution and enhancing-tumor Dice versus ground-truth area on the held-out BraTS 2021 set, with selected cases highlighted."></a></td>
+    <td align="center" valign="top"><a href="assets/failure-cases.png"><img src="assets/failure-cases.png" width="360" alt="Figure 7: representative BraTS 2021 failure cases showing FLAIR, T1ce, ground truth, predictions, and error maps, including boundary disagreement and false-positive or false-negative regions."></a></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Paper Fig. 6 · Dice distribution and lesion size</sub></td>
+    <td align="center"><sub>Paper Fig. 7 · Predictions and error maps</sub></td>
+  </tr>
+</table>
+
 Click any preview to open the full-resolution figure. Figures are reproduced from [Ding et al., *Cancer Imaging* (2026)](https://doi.org/10.1186/s40644-026-01150-5), under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/).
 
 ## Installation
