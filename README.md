@@ -8,9 +8,11 @@
 
 </div>
 
-PyTorch model implementation accompanying **“Dynamic layer_view_scale fusion for multimodal medical segmentation”**, published in *Cancer Imaging* (2026).
+This repository contains the PyTorch implementation of **“Dynamic layer_view_scale fusion for multimodal medical segmentation”**, published in *Cancer Imaging* (2026).
 
-DynamicFusionNet combines dense feature fusion, multi-scale contextual refinement, global–local feature modulation, and gated skip connections in a 2D encoder–decoder. The paper evaluates segmentation across MRI, OCT, and CT images.
+DynamicFusionNet learns to combine features across layers, scales, and global–local views for medical image segmentation. Its 2D encoder–decoder brings together dense feature fusion, multi-scale contextual refinement, global–local feature modulation, and gated skip connections. The paper evaluates the model on MRI, OCT, and CT images.
+
+The model is available in [`DynamicFusionNet.py`](DynamicFusionNet.py) for integration into your segmentation experiments.
 
 ## Architecture
 
@@ -42,15 +44,23 @@ DynamicFusionNet combines dense feature fusion, multi-scale contextual refinemen
   </tr>
 </table>
 
-Click any preview to open the full-resolution figure. Figures are reproduced from [Ding et al., *Cancer Imaging* (2026)](https://doi.org/10.1186/s40644-026-01150-5), under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/). The figure panels and labels are preserved.
-
-## Model release
-
-This repository provides the model in [`DynamicFusionNet.py`](DynamicFusionNet.py), its installation dependencies, and paper figures. Training pipelines, datasets, and pretrained weights are not included.
+Click any preview to open the full-resolution figure. Figures are reproduced from [Ding et al., *Cancer Imaging* (2026)](https://doi.org/10.1186/s40644-026-01150-5), under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/).
 
 ## Installation
 
-The paper reports **Python 3.12, PyTorch 2.7.0, and CUDA 12.6**. The following setup uses those versions and installs the dependencies required by the released model.
+The experiments in the paper used the following environment:
+
+| Component | Version |
+| --- | --- |
+| Python | 3.12 |
+| PyTorch | 2.7.0 |
+| TorchVision | 0.22.0 |
+| NumPy | 1.26.4 |
+| CUDA | 12.6 |
+
+The workstation had an Intel Core i9-14900K CPU, 32 GB of RAM, and one NVIDIA RTX 4090 GPU with 24 GB of memory.
+
+Create the environment and install the dependencies:
 
 ```bash
 git clone https://github.com/mh-zhou/DynamicFusionNet.git
@@ -59,45 +69,28 @@ cd DynamicFusionNet
 conda create -n dynamicfusionnet python=3.12 -y
 conda activate dynamicfusionnet
 
-# NVIDIA GPU / CUDA 12.6 build
-python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cu126
+python -m pip install torch==2.7.0 torchvision==0.22.0 --index-url https://download.pytorch.org/whl/cu126
 python -m pip install -r requirements.txt
 ```
-
-<details>
-<summary>CPU-only installation</summary>
-
-After creating and activating the same Python environment, use the CPU build instead:
-
-```bash
-python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -r requirements.txt
-```
-
-</details>
-
-The model imports `thop` and `torchsummary`, so both are included in `requirements.txt`. TorchVision is not required by the released model file.
 
 ## Quick start
+
+Import the model and run a forward pass with the 256 × 256 image size used in the paper:
 
 ```python
 import torch
 from DynamicFusionNet import DynamicFusionNet
 
 model = DynamicFusionNet(img_ch=1, output_ch=2).eval()
-x = torch.randn(1, 1, 224, 224)
+x = torch.randn(1, 1, 256, 256)
 
 with torch.inference_mode():
     logits = model(x)
 
-print(logits.shape)  # torch.Size([1, 2, 224, 224])
+print(logits.shape)  # torch.Size([1, 2, 256, 256])
 ```
 
-- **Input:** `[batch, channels, height, width]`. Set `img_ch` to the number of input channels; use spatial dimensions divisible by 16.
-- **Output:** `[batch, output_ch, height, width]` logits. Apply softmax or sigmoid according to your segmentation formulation.
-- This example checks the model interface with random initialization. Load your trained weights before using predictions.
-
-A CPU forward pass with this input/output shape was checked using Python 3.14.0 and PyTorch 2.11.0+cpu. The paper-version environment above is provided separately; it was not reinstalled for that check.
+Set `img_ch` to the number of input channels and `output_ch` to the number of output classes. Inputs follow `[batch, channels, height, width]`, with height and width divisible by 16. The model returns segmentation logits at the input resolution; apply softmax or sigmoid to obtain probabilities for your task.
 
 ## Citation
 

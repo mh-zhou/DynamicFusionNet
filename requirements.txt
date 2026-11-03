@@ -1,5 +1,6 @@
-# Model-only dependencies. Use Python 3.12 and choose a PyTorch CPU/CUDA build.
+# Install with Python 3.12; see README for the CUDA 12.6 build.
 torch==2.7.0
+torchvision==0.22.0
 numpy==1.26.4
 thop==0.1.1.post2209072238
 torchsummary==1.5.1
